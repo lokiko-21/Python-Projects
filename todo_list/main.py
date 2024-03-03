@@ -48,26 +48,33 @@ def display_tasks():
         task_list.insert(tk.END, f"{idx}. {task}")
 
 
+# instance of ToDoList class
 todo_list = ToDoList()
 
+# main application window
 window = tk.Tk()
 window.title("To-Do List")
 
+# GUI components
 label_task = tk.Label(window, text="Enter Task:")
 label_task.grid(row=0, column=0)
 
 entry_task = tk.Entry(window, width=30)
 entry_task.grid(row=0, column=1)
 
+# buttons for adding and removing tasks
 button_add = tk.Button(window, text="Add Task", command=add_task)
 button_add.grid(row=1, column=0)
 
 button_remove = tk.Button(window, text="Remove task", command=remove_task)
 button_remove.grid(row=1, column=1)
 
+# listbox to display tasks
 task_list = tk.Listbox(window, width=40)
 task_list.grid(row=2, columnspan=2)
 
+# display initial tasks
 display_tasks()
 
+# start tkinter event loop
 window.mainloop()
