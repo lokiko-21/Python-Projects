@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import messagebox, simpledialog
 
 class ToDoList:
     def __init__(self):
@@ -11,7 +11,7 @@ class ToDoList:
         self.tasks.append(task)
         display_tasks()
 
-    # method to remove tak from To-Do List
+    # method to remove task from To-Do List by simply clicking using curselection()
     def remove_task(self):
         selected_index = task_list.curselection()
         if selected_index:
@@ -23,14 +23,25 @@ class ToDoList:
         else:
             messagebox.showinfo("Message", "Please select task to remove.")
 
+    def edit_task(self, event=None):
+        selected_index = task_list.curselection()
+        if selected_index:
+            task = task_list.get(selected_index)
+            new_task = simpledialog.askstring("Edit Task", "Enter the new task:", initialvalue=task)
+            if new_task:
+                self.tasks[selected_index[0]] = new_task
+                display_tasks()
+        else:
+            messagebox.showinfo("Message", "Please select task to edit.")
 
-def add_task():
+
+def add_task(event=None):
     task = entry_task.get()
     if task:
         todo_list.add_task(task)
         entry_task.delete(0, tk.END)
 
-def remove_task():
+def remove_task(event=None):
     todo_list.remove_task()
 
 def display_tasks():
@@ -52,6 +63,7 @@ label_task.grid(row=0, column=0)
 
 entry_task = tk.Entry(window, width=30)
 entry_task.grid(row=0, column=1)
+entry_task.focus_set()
 
 # buttons for adding and removing tasks
 button_add = tk.Button(window, text="Add Task", command=add_task)
@@ -60,9 +72,16 @@ button_add.grid(row=1, column=0)
 button_remove = tk.Button(window, text="Remove Selected Task", command=remove_task)
 button_remove.grid(row=1, column=1)
 
+button_edit = tk.Button(window, text="Edit Task", command=todo_list.edit_task)
+button_edit.grid(row=1, column=2)
+
 # listbox to display tasks
 task_list = tk.Listbox(window, width=40)
-task_list.grid(row=2, columnspan=2)
+task_list.grid(row=2, columnspan=3)
+
+window.bind("<Control-d>", remove_task)
+window.bind("<Control-Return>", add_task)
+task_list.bind("<Double-1>", todo_list.edit_task)
 
 # start tkinter event loop
 window.mainloop()
