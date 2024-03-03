@@ -6,12 +6,12 @@ class ToDoList:
         # initializes empty list to store tasks
         self.tasks = []
 
-    # method to add task to To-Do List
+    # method for adding new tasks
     def add_task(self, task):
         self.tasks.append(task)
         display_tasks()
 
-    # method to remove task from To-Do List by simply clicking using curselection()
+    # method for removing existing tasks
     def remove_task(self):
         selected_index = task_list.curselection()
         if selected_index:
@@ -23,6 +23,7 @@ class ToDoList:
         else:
             messagebox.showinfo("Message", "Please select task to remove.")
 
+    # method for editing existing tasks
     def edit_task(self, event=None):
         selected_index = task_list.curselection()
         if selected_index:
@@ -65,7 +66,7 @@ entry_task = tk.Entry(window, width=30)
 entry_task.grid(row=0, column=1)
 entry_task.focus_set()
 
-# buttons for adding and removing tasks
+# buttons for adding, removing, and editing tasks
 button_add = tk.Button(window, text="Add Task", command=add_task)
 button_add.grid(row=1, column=0)
 
@@ -79,6 +80,7 @@ button_edit.grid(row=1, column=2)
 task_list = tk.Listbox(window, width=40)
 task_list.grid(row=2, columnspan=3)
 
+# shortcuts
 window.bind("<Control-d>", remove_task)
 window.bind("<Control-Return>", add_task)
 task_list.bind("<Double-1>", todo_list.edit_task)
