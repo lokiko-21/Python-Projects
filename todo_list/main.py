@@ -1,3 +1,5 @@
+import tkinter as tk
+
 class ToDoList:
     def __init__(self):
         # initializes empty list to store tasks
@@ -19,42 +21,53 @@ class ToDoList:
     # method to display tasks in the To-Do List
     def show_tasks(self):
         if self.tasks:
-            print("\n===To-Do List===")
+            print("To-Do List")
             for idx, task in enumerate(self.tasks, start=1):
                 print(f"{idx}. {task}")
         else:
-            print("\nTo-Do List is empty.")
-    
+            print("To-Do List is empty.")
 
-# main function to run the To-Do List application
-def main():
-    todo_list = ToDoList()
 
-    while True:
-        # display menu
-        print("\n1 - Add Task")
-        print("2 - Remove Task")
-        print("3 - Show Tasks")
-        print("4 - Exit")
+def add_task():
+    task = entry_task.get()
+    if task:
+        todo_list.add_task(task)
+        entry_task.delete(0, tk.END)
+        display_tasks()
 
-        #get user input
-        choice = input("\nEnter your choice: ")
+def remove_task():
+    task = entry_task.get()
+    if task:
+        todo_list.remove_task(task)
+        entry_task.delete(0, tk.END)
+        display_tasks()
 
-        # inpu handler
-        if choice == '1':
-            task = input("\nEnter task to add: ")
-            todo_list.add_task(task)
-        elif choice == '2':
-            task = input("\nEnter task to remove: ")
-            todo_list.remove_task(task)
-        elif choice == '3':
-            todo_list.show_tasks()
-        elif choice == '4':
-            print("\nexisting program.")
-            break
-        else:
-            print("\nInvalid choice. Please enter a number between 1 and 4.")
+def display_tasks():
+    task_list.delete(0, tk.END)
+    for idx, task in enumerate(todo_list.tasks, start=1):
+        task_list.insert(tk.END, f"{idx}. {task}")
 
-if __name__ == "__main__":
-    # run main function when script is executed
-    main()
+
+todo_list = ToDoList()
+
+window = tk.Tk()
+window.title("To-Do List")
+
+label_task = tk.Label(window, text="Enter Task:")
+label_task.grid(row=0, column=0)
+
+entry_task = tk.Entry(window, width=30)
+entry_task.grid(row=0, column=1)
+
+button_add = tk.Button(window, text="Add Task", command=add_task)
+button_add.grid(row=1, column=0)
+
+button_remove = tk.Button(window, text="Remove task", command=remove_task)
+button_remove.grid(row=1, column=1)
+
+task_list = tk.Listbox(window, width=40)
+task_list.grid(row=2, columnspan=2)
+
+display_tasks()
+
+window.mainloop()
