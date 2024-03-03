@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import messagebox
 
 class ToDoList:
     def __init__(self):
@@ -8,24 +9,19 @@ class ToDoList:
     # method to add task to To-Do List
     def add_task(self, task):
         self.tasks.append(task)
-        print(f'Task "{task}" added to the to-do list.')
+        display_tasks()
 
     # method to remove tak from To-Do List
-    def remove_task(self, task):
-        if task in self.tasks:
-            self.tasks.remove(task)
-            print(f'Task "{task}" removed from the to-do list.')
+    def remove_task(self):
+        selected_index = task_list.curselection()
+        if selected_index:
+            task = task_list.get(selected_index)
+            confirm = messagebox.askyesno("Confirm", f"Are you done with the task '{task}'?")
+            if confirm:
+                self.tasks.remove(task)
+                display_tasks()
         else:
-            print(f'Task "{task}" not found in the to-do list.')
-
-    # method to display tasks in the To-Do List
-    def show_tasks(self):
-        if self.tasks:
-            print("To-Do List")
-            for idx, task in enumerate(self.tasks, start=1):
-                print(f"{idx}. {task}")
-        else:
-            print("To-Do List is empty.")
+            messagebox.showinfo("Message", "Please select task to remove.")
 
 
 def add_task():
@@ -33,19 +29,14 @@ def add_task():
     if task:
         todo_list.add_task(task)
         entry_task.delete(0, tk.END)
-        display_tasks()
 
 def remove_task():
-    task = entry_task.get()
-    if task:
-        todo_list.remove_task(task)
-        entry_task.delete(0, tk.END)
-        display_tasks()
+    todo_list.remove_task()
 
 def display_tasks():
     task_list.delete(0, tk.END)
-    for idx, task in enumerate(todo_list.tasks, start=1):
-        task_list.insert(tk.END, f"{idx}. {task}")
+    for task in todo_list.tasks:
+        task_list.insert(tk.END, task)
 
 
 # instance of ToDoList class
@@ -66,15 +57,12 @@ entry_task.grid(row=0, column=1)
 button_add = tk.Button(window, text="Add Task", command=add_task)
 button_add.grid(row=1, column=0)
 
-button_remove = tk.Button(window, text="Remove task", command=remove_task)
+button_remove = tk.Button(window, text="Remove Selected Task", command=remove_task)
 button_remove.grid(row=1, column=1)
 
 # listbox to display tasks
 task_list = tk.Listbox(window, width=40)
 task_list.grid(row=2, columnspan=2)
-
-# display initial tasks
-display_tasks()
 
 # start tkinter event loop
 window.mainloop()
