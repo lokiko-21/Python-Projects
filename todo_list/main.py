@@ -58,6 +58,8 @@ todo_list = ToDoList()
 window = tk.Tk()
 window.title("To-Do List")
 
+window.resizable(True, True)
+
 # GUI components
 label_task = tk.Label(window, text="Enter Task:")
 label_task.grid(row=0, column=0)
