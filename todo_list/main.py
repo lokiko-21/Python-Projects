@@ -23,6 +23,19 @@ class ToDoList:
         else:
             messagebox.showinfo("Message", "Please select task to remove.")
 
+    # method for saving tasks to a text.txt file
+    def save_tasks(self):
+        with open("tasks.txt", "w") as file:
+            for task in self.tasks:
+                file.write(task + "\n")
+
+    def load_tasks(self):
+        try:
+            with open("tasks.txt", "r") as file:
+                self.tasks = [line.strip() for line in file.readlines()]
+        except FileNotFoundError:
+            self.tasks = [] # if files don't exist, it initializes tasks as an empty list
+
     # method for editing existing tasks
     def edit_task(self, event=None):
         selected_index = task_list.curselection()
@@ -35,18 +48,19 @@ class ToDoList:
         else:
             messagebox.showinfo("Message", "Please select task to edit.")
 
-
 def add_task(event=None):
     task = entry_task.get()
     if task:
         todo_list.add_task(task)
         entry_task.delete(0, tk.END)
+        todo_list.save_tasks()
 
 def remove_task(event=None):
     todo_list.remove_task()
+    todo_list.save_tasks()
 
 def display_tasks():
-    task_list.delete(0, tk.END)
+    todo_list.task_list.delete(0, tk.END)
     for task in todo_list.tasks:
         task_list.insert(tk.END, task)
 
@@ -60,6 +74,9 @@ window.title("To-Do List")
 
 window.resizable(True, True)
 
+# load tasks from file before displaying GUI components
+todo_list.load_tasks()
+
 # GUI components
 label_task = tk.Label(window, text="Enter Task:")
 label_task.grid(row=0, column=0)
@@ -67,6 +84,9 @@ label_task.grid(row=0, column=0)
 entry_task = tk.Entry(window, width=30)
 entry_task.grid(row=0, column=1)
 entry_task.focus_set()
+
+# display tasks immediately after loading GUI ocmponents
+display_tasks()
 
 # buttons for adding, removing, and editing tasks
 button_add = tk.Button(window, text="Add Task", command=add_task)
